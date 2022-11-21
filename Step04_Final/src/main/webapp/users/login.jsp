@@ -1,9 +1,9 @@
 <%@page import="test.users.dao.UsersDao"%>
 <%@page import="test.users.dto.UsersDto"%>
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%
-   // 1. Æû Àü¼ÛµÇ´Â ¾ÆÀÌµð, ºñ¹Ð¹øÈ£ ÀÐ¾î¿À±â
+   // 1. í¼ ì „ì†¡ë˜ëŠ” ì•„ì´ë””, ë¹„ë°€ë²ˆí˜¸ ì½ì–´ì˜¤ê¸°
    request.setCharacterEncoding("utf-8");
    String id = request.getParameter("id");
    String pwd = request.getParameter("pwd");
@@ -11,14 +11,14 @@
    UsersDto dto = new UsersDto();
    dto.setId(id);
    dto.setPwd(pwd);
-   // 2. DB¿¡ ½ÇÁ¦·Î Á¸ÀçÇÏ´Â ¸Â´Â Á¤º¸ÀÎÁö È®ÀÎÇÑ´Ù.(¸Â´Â Á¤º¸ÀÌ¸é ·Î±×ÀÎÃ³¸® ÇÑ´Ù.)
+   // 2. DBì— ì‹¤ì œë¡œ ì¡´ìž¬í•˜ëŠ” ë§žëŠ” ì •ë³´ì¸ì§€ í™•ì¸í•œë‹¤.(ë§žëŠ” ì •ë³´ì´ë©´ ë¡œê·¸ì¸ì²˜ë¦¬ í•œë‹¤.)
    boolean isValid= UsersDao.getInstance().isValid(dto);
    if(isValid){
-	  //session scope ¿¡ id¶ó´Â Å°°ªÀ¸·Î ·Î±×ÀÎµÈ ¾ÆÀÌµð ´ã±â
+	  //session scope ì— idë¼ëŠ” í‚¤ê°’ìœ¼ë¡œ ë¡œê·¸ì¸ëœ ì•„ì´ë”” ë‹´ê¸°
       session.setAttribute("id", id);
    }
    
-   // 3. ÀÀ´ä
+   // 3. ì‘ë‹µ
 %>
 <!DOCTYPE html>
 <html>
@@ -32,13 +32,13 @@
    <div class="container">
       <%if(isValid) {%>
          <p class="alert alert-success">
-            <strong><%=dto.getId() %></strong> ´Ô ·Î±×ÀÎµÇ¾ú½À´Ï´Ù.
-            <a href="${pageContext.request.contextPath }/index.jsp">È¨À¸·Î °¡±â</a>
+            <strong><%=dto.getId() %></strong> ë‹˜ ë¡œê·¸ì¸ë˜ì—ˆìŠµë‹ˆë‹¤.
+            <a href="${pageContext.request.contextPath }/index.jsp">í™ˆìœ¼ë¡œ ê°€ê¸°</a>
          </p>
       <%}else{ %>
          <p class="alert alert-danger">
-            ·Î±×ÀÎ ½ÇÆÐ
-            <a href="loginform.jsp">´Ù½Ã ·Î±×ÀÎ ÇÏ±â</a>            
+            ë¡œê·¸ì¸ ì‹¤íŒ¨
+            <a href="loginform.jsp">ë‹¤ì‹œ ë¡œê·¸ì¸ í•˜ê¸°</a>            
          </p>
       <%} %>
    </div>
