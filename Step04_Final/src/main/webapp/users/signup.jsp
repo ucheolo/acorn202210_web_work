@@ -3,7 +3,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-	request.setCharacterEncoding("utf-8");
 	//1. 폼전송되는 아이디, 비밀번호, 이메일 주소를 읽어온다.
 	String id = request.getParameter("id");
 	String pwd = request.getParameter("pwd");
