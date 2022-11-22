@@ -20,6 +20,78 @@ public class UsersDao {
 		return dao;
 	}
 	
+	//개인정보(가입정보)를 삭제하는 메소드
+	public boolean delete(String id) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		//수정된 row 의 갯수를 담을 지역변수를 미리 만들고 초기값 0 대입하기
+		int rowCount = 0;
+		try {
+			// Connection 객체의 참조값 얻어오기
+			conn = new DbcpBean().getConn();
+			// 실행할 미완성의 sql 문
+			String sql = "DELETE FROM users"
+					+ " WHERE id=?";
+			// PreparedStatement 객체의 참조값 얻어오기
+			pstmt = conn.prepareStatement(sql);
+			// ? 에 값 바인딩할게 있으면 해주고
+			pstmt.setString(1, id);
+			//sql 문 실행하고 변화된(추가, 수정, 삭제) row 의 갯수를 리턴받기
+			rowCount = pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+			}
+		}
+		//변화된 rowCount 값을 확인해서 작업의 성공 여부를 리턴해 준다.
+		if (rowCount > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	//개인정보(이메일)을 수정하는 메소드
+	public boolean update(UsersDto dto) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int rowCount = 0;
+		try {
+			conn = new DbcpBean().getConn();
+			String sql = "UPDATE users"
+					+ " SET email=?"
+					+ " WHERE id=?";
+			pstmt = conn.prepareStatement(sql);
+			// ? 에 바인딩할게 있으면 해주고
+			pstmt.setString(1, dto.getEmail());
+			pstmt.setString(2, dto.getId());
+			// INSERT OR UPDATE OR DELETE 문을 수행하고 수정되거나, 삭제되거나, 추가된 ROW 의 갯수 리턴 받기
+			rowCount = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+			}
+		}
+		if (rowCount > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	// 비밀 번호를 수정하는 메소드
 	public boolean updatePwd(UsersDto dto) {
 		Connection conn = null;
