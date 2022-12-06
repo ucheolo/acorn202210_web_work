@@ -132,4 +132,45 @@ public List<AccountDto> getList(AccountDto dto){
 		return list;
 	}
 
+	public int incomeData() {
+		
+		AccountDto dto=null;
+		int sum = 0;
+		//필요한 객체를 담을 지역변수를 미리 만들어 둔다. 
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			//Connection Pool 에서 Connection 객체를 하나 얻어온다.
+			conn = new DbcpBean().getConn();
+			//실행할 sql 문의 뼈대 구성하기
+			String sql = "SELECT income"
+					+ " FROM account";
+			//sql 문의 ? 에 바인딩 할게 있으면 한다.
+			pstmt = conn.prepareStatement(sql);
+			
+			//SELECT 문을 수행하고 결과값을 받아온다.
+			rs = pstmt.executeQuery();
+			//ResultSet 에서 필요한 값을 얻어낸다.
+			if (rs.next()) {
+				dto=new AccountDto();
+				dto.setIncome(rs.getString("income"));
+				sum = sum + Integer.parseInt(rs.getString("income"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close(); //Connection Pool 에 Connection 반납하기
+			} catch (Exception e) {
+			}
+		}
+		return sum;
+	}
+	
 }
