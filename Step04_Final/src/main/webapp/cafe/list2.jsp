@@ -3,6 +3,7 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%
 	//한 페이지에 몇개씩 표시할 것인지
 	final int PAGE_ROW_COUNT=5;
@@ -46,6 +47,15 @@
 	
 	//CafeDto 를 인자로 전달해서 글목록 얻어오기
 	List<CafeDto> list=CafeDao.getInstance().getList(dto);
+	
+	// JSTL + EL 을 테스트 하기 위해서 필요한 값을 request 영역에 담기
+	// list 라는 키값으로 request scope 에 담기
+	request.setAttribute("list", list);
+	// 페이징 처리에 필요한 값을 request scope 에 담기
+	request.setAttribute("pageNum", pageNum);
+	request.setAttribute("startPageNum", startPageNum);
+	request.setAttribute("endPageNum", endPageNum);
+	request.setAttribute("totalPageCount", totalPageCount);
 %>    
 <!DOCTYPE html>
 <html>
@@ -56,6 +66,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 </head>
 <body>
+	<jsp:include page="/WEB-INF/include/navbar.jsp">
+		<jsp:param value="cafe" name="thisPage"/>
+	</jsp:include>
 	<div class="container">
 		<a href="${pageContext.request.contextPath }/cafe/private/insertform.jsp">새글 작성</a>
 		<h3>카페 글 목록 입니다.</h3>
@@ -70,17 +83,17 @@
 				</tr>
 			</thead>
 			<tbody>
-			<%for(CafeDto tmp:list){ %>
-				<tr>
-					<td><%=tmp.getNum() %></td>
-					<td><%=tmp.getWriter() %></td>
-					<td>
-						<a href="detail.jsp?num=<%=tmp.getNum() %>"><%=tmp.getTitle() %></a>
-					</td>
-					<td><%=tmp.getViewCount() %></td>
-					<td><%=tmp.getRegdate() %></td>
-				</tr>
-			<%} %>
+				<c:forEach var="tmp" items="${list }">
+					<tr>
+						<td>${tmp.num }</td>
+						<td>${tmp.writer }</td>
+						<td>
+							<a href="detail.jsp?num=${tmp.num }">${tmp.title }</a>
+						</td>
+						<td>${tmp.viewCount }</td>
+						<td>${tmp.regdate }</td>
+					</tr>
+				</c:forEach>
 			</tbody>
 		</table>
 		<nav>
@@ -88,26 +101,27 @@
 				<%--
 					startPageNum 이 1 이 아닌 경우에만 Prev 링크를 제공한다. 
 				 --%>
-				<%if(startPageNum != 1){ %>
+				<c:if test="${startPageNum ne 1 }">
 					<li class="page-item">
-						<a class="page-link" href="list.jsp?pageNum=<%=startPageNum-1 %>">Prev</a>
+						<a class="page-link" href="list.jsp?pageNum=${startPageNum-1 }">Prev</a>
 					</li>
-				<%} %>
-			
-				<%for(int i=startPageNum; i<=endPageNum; i++){%>
-					<li class="page-item <%=pageNum == i ? "active" : "" %>">
-						<a class="page-link" href="list.jsp?pageNum=<%=i %>"><%=i %></a>
+				</c:if>
+				
+				<c:forEach var="i" begin="${startPageNum }" end="${endPageNum }">
+					<li class="page-item ${pageNum == i ? 'active' : '' }">
+						<a class="page-link" href="list.jsp?pageNum=${i }">${i }</a>
 					</li>
-				<%}%>
+				</c:forEach>
 				
 				<%--
 					마지막 페이지 번호가 전체 페이지의 갯수보다 작으면 Next 링크를 제공한다. 
 				 --%>
-				<%if(endPageNum < totalPageCount){ %>
+				<c:if test="${endPageNum lt totalPageCount }">
 					<li class="page-item">
-						<a class="page-link" href="list.jsp?pageNum=<%=endPageNum+1 %>">Next</a>
+						<a class="page-link" href="list.jsp?pageNum=${endPageNum+1 }">Next</a>
 					</li>
-				<%} %>
+				</c:if>
+				
 			</ul>
 		</nav>
 	</div>
