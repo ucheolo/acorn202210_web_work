@@ -49,6 +49,8 @@
 			<li><a href="${pageContext.request.contextPath }/private/game.jsp">회원전용공간(게임)</a></li>
 			<li><a href="file/list.jsp">자료실</a></li>
 			<li><a href="cafe/list.jsp">글목록보기</a></li>
+			<li><a href="my_app/index.html">React 테스트</a></li>
+			<li><a href="users/signup_form4.jsp">React 테스트2</a></li>
 		</ul>
 	</div>
 </body>
